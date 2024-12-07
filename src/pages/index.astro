@@ -1,19 +1,22 @@
 ---
-import MainLayout from '@/layouts/MainLayout.astro';
 import { actions } from 'astro:actions';
+import MainLayout from '@/layouts/MainLayout.astro';
+import { ProductList } from '@/components';
 
-const { data: products, error } = await Astro.callAction(actions.getProductsByPage, {});
+const { data, error } = await Astro.callAction(actions.getProductsByPage, {});
 
 if (error) {
   console.log(error);
   return Astro.redirect('/');
 }
 
+const {products, totalPages} = data;
 console.log(products);
 
 ---
 
 <MainLayout>
-  <h1 class="text-3xl">Home Page</h1>
+  <h1 class="text-3xl">Llistat de productes</h1>
+  <ProductList products={products} client:idle/>
   
 </MainLayout>
