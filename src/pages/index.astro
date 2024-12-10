@@ -2,21 +2,31 @@
 import { actions } from 'astro:actions';
 import MainLayout from '@/layouts/MainLayout.astro';
 import { ProductList } from '@/components';
+import Pagination from '@/components/shared/Pagination.astro';
 
-const { data, error } = await Astro.callAction(actions.getProductsByPage, {});
+const searchParams = Astro.url.searchParams;
+const pageParam = Number( searchParams.get('page') ?? 1);
+
+const { data, error } = await Astro.callAction(actions.getProductsByPage, {
+  page: pageParam,
+});
 
 if (error) {
   console.log(error);
   return Astro.redirect('/');
 }
 
+
+
 const {products, totalPages} = data;
-console.log(products);
+// console.log(products);
 
 ---
 
 <MainLayout>
   <h1 class="text-3xl">Llistat de productes</h1>
   <ProductList products={products} client:idle/>
+
+  <Pagination totalPages={totalPages} />
   
 </MainLayout>

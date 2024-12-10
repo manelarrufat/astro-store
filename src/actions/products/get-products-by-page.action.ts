@@ -12,7 +12,7 @@ export const getProductsByPage = defineAction({
     }),
     handler: async({ page, limit }) => {
 
-        page = page >= 0 ? 1 : page;
+        page = page <= 0 ? 1 : page;
 
         const [ totalRecords ] = await db.select({ count: count()}).from(Product);
         const totalPages = Math.ceil( totalRecords.count / limit );
